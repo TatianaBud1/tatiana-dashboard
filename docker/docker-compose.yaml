@@ -1,0 +1,16 @@
+services:
+  bash_monitor:
+    build:
+      context: .
+      dockerfile: Dockerfile.bash
+    container_name: bash-monitor
+    restart: unless-stopped
+
+  python_dashboard:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.python
+    container_name: tatiana-dashboard
+    ports:
+      - "8000:8000"
+    restart: unless-stopped

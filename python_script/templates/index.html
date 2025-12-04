@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard Resurse Tatiana</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <h1>Bine ai venit, {{ owner }}!</h1>
+
+    <div style="width:50%">
+        <canvas id="cpuChart"></canvas>
+    </div>
+    <div style="width:50%">
+        <canvas id="ramChart"></canvas>
+    </div>
+    <div style="width:50%">
+        <canvas id="diskChart"></canvas>
+    </div>
+
+    <script>
+        const times = ["00:00", "04:00", "08:00", "12:00", "16:00", "20:00"];
+        const cpu = [35, 45, 50, 40, 60, 55];
+        const ram = [40, 55, 60, 50, 65, 60];
+        const disk = [20, 25, 30, 35, 40, 45];
+
+        new Chart(document.getElementById('cpuChart'), {
+            type: 'line',
+            data: {
+                labels: times,
+                datasets: [{
+                    label: 'CPU Usage %',
+                    data: cpu,
+                    borderColor: 'red',
+                    fill: false
+                }]
+            }
+        });
+
+        new Chart(document.getElementById('ramChart'), {
+            type: 'line',
+            data: {
+                labels: times,
+                datasets: [{
+                    label: 'RAM Usage %',
+                    data: ram,
+                    borderColor: 'blue',
+                    fill: false
+                }]
+            }
+        });
+
+        new Chart(document.getElementById('diskChart'), {
+            type: 'line',
+            data: {
+                labels: times,
+                datasets: [{
+                    label: 'Disk Usage %',
+                    data: disk,
+                    borderColor: 'green',
+                    fill: false
+                }]
+            }
+        });
+    </script>
+</body>
+
+</html>
