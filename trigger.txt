@@ -1,1 +1,1 @@
-Trigger CD workflow for GHCR
+Trigger CD workflow
