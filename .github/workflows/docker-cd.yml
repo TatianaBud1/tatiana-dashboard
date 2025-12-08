@@ -19,13 +19,13 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Build Bash Service image
-        run: docker build -f Dockerfile.bash -t ghcr.io/${{ github.repository_owner }}/tatiana-bash:latest .
+        run: docker build -f Dockerfile.bash -t ghcr.io/tatianabud1/tatiana-bash:latest .
 
       - name: Build Python Dashboard image
-        run: docker build -f Dockerfile.python -t ghcr.io/${{ github.repository_owner }}/tatiana-dashboard:latest .
+        run: docker build -f Dockerfile.python -t ghcr.io/tatianabud1/tatiana-dashboard:latest .
 
       - name: Push Bash Service image
-        run: docker push ghcr.io/${{ github.repository_owner }}/tatiana-bash:latest
+        run: docker push ghcr.io/tatianabud1/tatiana-bash:latest
 
       - name: Push Python Dashboard image
-        run: docker push ghcr.io/${{ github.repository_owner }}/tatiana-dashboard:latest
+        run: docker push ghcr.io/tatianabud1/tatiana-dashboard:latest
