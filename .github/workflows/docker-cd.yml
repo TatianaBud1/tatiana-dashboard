@@ -13,11 +13,14 @@ jobs:
 
       - name: Log in to GHCR
         uses: docker/login-action@v2
+
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GHCR_TOKEN }}
 
+      - name: Show GitHub Actor
+        run: echo "GitHub Actor is ${{ github.actor }}"
       - name: Build Bash Service image
         run: docker build -f Dockerfile.bash -t ghcr.io/tatianabud1/tatiana-bash:latest .
 
