@@ -1,68 +1,75 @@
 <!DOCTYPE html>
-<html>
+<html lang="ro">
 
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard Resurse Tatiana</title>
+    <title>Dashboard Tatiana</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f0f4f8;
+            margin: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 10px;
+            display: inline-block;
+            width: 150px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .weather-icon {
+            width: 50px;
+            height: 50px;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>Bine ai venit, {{ owner }}!</h1>
+    <h1>Prognoza meteo Corjeuți</h1>
+    <div>
+        {% for day in forecast %}
+        <div class="card">
+            <p>{{ day.date }}</p>
+            <!-- Iconița meteo -->
+            {% if day.icon %}
+            <img class="weather-icon" src="http://openweathermap.org/img/wn/{{ day.icon }}@2x.png"
+                alt="{{ day.description }}">
+            {% endif %}
 
-    <div style="width:50%">
-        <canvas id="cpuChart"></canvas>
+            <p>{{ day.temp }}°C</p>
+            <p>Umiditate: {{ day.humidity }}%</p>
+            <p>Precipitații: {{ day.precipitation }} mm</p>
+            <p>Vânt: {{ day.wind }} m/s</p>
+        </div>
+        {% endfor %}
     </div>
-    <div style="width:50%">
-        <canvas id="ramChart"></canvas>
-    </div>
-    <div style="width:50%">
-        <canvas id="diskChart"></canvas>
-    </div>
+
+    <canvas id="weatherChart" width="800" height="400"></canvas>
 
     <script>
-        const times = ["00:00", "04:00", "08:00", "12:00", "16:00", "20:00"];
-        const cpu = [35, 45, 50, 40, 60, 55];
-        const ram = [40, 55, 60, 50, 65, 60];
-        const disk = [20, 25, 30, 35, 40, 45];
+        const ctx = document.getElementById('weatherChart').getContext('2d');
+        const labels = {{ forecast | map(attribute = 'date') | list }};
+        const temps = {{ forecast | map(attribute = 'temp') | list }};
+        const humidity = {{ forecast | map(attribute = 'humidity') | list }};
+        const precip = {{ forecast | map(attribute = 'precipitation') | list }};
 
-        new Chart(document.getElementById('cpuChart'), {
+        new Chart(ctx, {
             type: 'line',
             data: {
-                labels: times,
-                datasets: [{
-                    label: 'CPU Usage %',
-                    data: cpu,
-                    borderColor: 'red',
-                    fill: false
-                }]
-            }
-        });
-
-        new Chart(document.getElementById('ramChart'), {
-            type: 'line',
-            data: {
-                labels: times,
-                datasets: [{
-                    label: 'RAM Usage %',
-                    data: ram,
-                    borderColor: 'blue',
-                    fill: false
-                }]
-            }
-        });
-
-        new Chart(document.getElementById('diskChart'), {
-            type: 'line',
-            data: {
-                labels: times,
-                datasets: [{
-                    label: 'Disk Usage %',
-                    data: disk,
-                    borderColor: 'green',
-                    fill: false
-                }]
-            }
+                labels: labels,
+                datasets: [
+                    { label: 'Temperatura °C', data: temps, borderColor: 'red', fill: false },
+                    { label: 'Umiditate %', data: humidity, borderColor: 'blue', fill: false },
+                    { label: 'Precipitații mm', data: precip, borderColor: 'green', fill: false }
+                ]
+            },
+            options: { responsive: true, plugins: { legend: { position: 'top' } } }
         });
     </script>
 </body>

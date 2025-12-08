@@ -1,0 +1,16 @@
+services:
+  python_dashboard:
+    build:
+      context: .
+      dockerfile: Dockerfile.python
+    container_name: tatiana-dashboard
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./python_script:/app
+
+  bash_monitor:
+    build:
+      context: .
+      dockerfile: Dockerfile.bash
+    container_name: bash-monitor

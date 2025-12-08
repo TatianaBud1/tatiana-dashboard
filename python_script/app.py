@@ -1,22 +1,15 @@
 from flask import Flask, render_template
-import random
-from datetime import datetime
+from weather import get_week_forecast
+from generate_data import generate_week_data
 
 app = Flask(__name__)
 
 @app.route("/")
 def dashboard():
-    times = [f"{h}:00" for h in range(24)]
-    cpu_values = [random.randint(10, 90) for _ in times]
-    ram_values = [random.randint(20, 80) for _ in times]
-    disk_values = [random.randint(5, 90) for _ in times]
-
-    return render_template("index.html",
-                           owner="Tatiana",
-                           times=times,
-                           cpu=cpu_values,
-                           ram=ram_values,
-                           disk=disk_values)
+    forecast = get_week_forecast()
+    if not forecast:
+        forecast = generate_week_data()  # fallback dacă nu merge API-ul
+    return render_template("index.html", forecast=forecast)
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8000, debug=True)
+    app.run(host="0.0.0.0", port=8000)
