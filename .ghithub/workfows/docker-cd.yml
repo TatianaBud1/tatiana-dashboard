@@ -7,7 +7,6 @@ on:
 jobs:
   push-images:
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -20,12 +19,10 @@ jobs:
           password: ${{ secrets.GHCR_TOKEN }}
 
       - name: Build Bash Service image
-        run: |
-          docker build -f Dockerfile.bash -t ghcr.io/${{ github.repository_owner }}/tatiana-bash:latest .
+        run: docker build -f Dockerfile.bash -t ghcr.io/${{ github.repository_owner }}/tatiana-bash:latest .
 
       - name: Build Python Dashboard image
-        run: |
-          docker build -f Dockerfile.python -t ghcr.io/${{ github.repository_owner }}/tatiana-dashboard:latest .
+        run: docker build -f Dockerfile.python -t ghcr.io/${{ github.repository_owner }}/tatiana-dashboard:latest .
 
       - name: Push Bash Service image
         run: docker push ghcr.io/${{ github.repository_owner }}/tatiana-bash:latest
