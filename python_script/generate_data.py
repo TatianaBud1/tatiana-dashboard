@@ -12,7 +12,7 @@ def generate_week_data():
         day = today + timedelta(days=i)
         forecast.append({
             "date": day.strftime("%Y-%m-%d"),
-            "temp_day": random.randint(-5, 15),
+            "temp": random.randint(-5, 15),
             "humidity": random.randint(50, 100),
             "precipitation": random.randint(0, 10),
             "wind": round(random.uniform(0.5, 5.0), 1),

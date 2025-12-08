@@ -137,8 +137,7 @@ docker logs tatiana_bash
 
 * Adăugare API real OpenWeatherMap.
 * Integrare CI/CD (GitHub Actions).
-* Deploy pe AWS (ECS + Fargate).
-* Sistem de log-uri centralizat.
+
 
 ---
 

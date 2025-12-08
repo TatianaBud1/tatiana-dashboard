@@ -44,7 +44,7 @@
 
             <p>{{ day.temp }}°C</p>
             <p>Umiditate: {{ day.humidity }}%</p>
-            <p>Precipitații: {{ day.precipitation }} mm</p>
+            <p>Precipitații: {{ day.precipitation }} %</p>
             <p>Vânt: {{ day.wind }} m/s</p>
         </div>
         {% endfor %}
@@ -53,25 +53,28 @@
     <canvas id="weatherChart" width="800" height="400"></canvas>
 
     <script>
-        const ctx = document.getElementById('weatherChart').getContext('2d');
-        const labels = {{ forecast | map(attribute = 'date') | list }};
-        const temps = {{ forecast | map(attribute = 'temp') | list }};
-        const humidity = {{ forecast | map(attribute = 'humidity') | list }};
-        const precip = {{ forecast | map(attribute = 'precipitation') | list }};
+        {
+            `
+    const weatherDates = ${JSON.stringify(forecast.map(d => d.date))};
+    const tempsData = ${JSON.stringify(forecast.map(d => d.temp_day))};
+    const humidityData = ${JSON.stringify(forecast.map(d => d.humidity))};
+    const precipData = ${JSON.stringify(forecast.map(d => d.precipitation))};
+    const windData = ${JSON.stringify(forecast.map(d => d.wind))};
 
-        new Chart(ctx, {
-            type: 'line',
+            // Creare chart
+            const ctx = document.getElementById('weatherChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'line',
             data: {
-                labels: labels,
-                datasets: [
-                    { label: 'Temperatura °C', data: temps, borderColor: 'red', fill: false },
-                    { label: 'Umiditate %', data: humidity, borderColor: 'blue', fill: false },
-                    { label: 'Precipitații mm', data: precip, borderColor: 'green', fill: false }
-                ]
-            },
-            options: { responsive: true, plugins: { legend: { position: 'top' } } }
-        });
+                labels: weatherDates,
+            datasets: [
+            {label: 'Temperatura °C', data: tempsData, borderColor: 'red', fill: false },
+            {label: 'Umiditate %', data: humidityData, borderColor: 'blue', fill: false },
+            {label: 'Precipitații mm', data: precipData, borderColor: 'green', fill: false },
+            {label: 'Vânt m/s', data: windData, borderColor: 'orange', fill: false }
+            ]
+        },
+        options: { responsive: true, plugins: { legend: { position: 'top' } } }
+    });
+        `}
     </script>
-</body>
-
-</html>
