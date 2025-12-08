@@ -1,1 +1,1 @@
-Trigger CD workflow with correct token
+Trigger CD workflow with new token
