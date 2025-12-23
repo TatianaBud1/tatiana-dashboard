@@ -1,12 +1,17 @@
 #!/bin/bash
 
-OUTPUT_FILE="/data/connectivity.json"
-HISTORY_FILE="/data/latency_history.tmp"
+# Folder date (relativ la script)
+DATA_DIR="../python_script/data"
+
+# Asigură-te că există folderul
+mkdir -p "$DATA_DIR"
+# Fișiere
+HISTORY_FILE="$DATA_DIR/latency_history.tmp"
+OUTPUT_FILE="$DATA_DIR/internet_status.json"
 
 while true
 do
     TIMESTAMP=$(date +"%Y-%m-%d %H:%M:%S")
-
     TARGET="google.com"
     PING=$(ping -c 1 $TARGET 2>/dev/null)
 
@@ -24,9 +29,9 @@ do
     fi
 
     # Istoric latență
-    echo "$LATENCY" >> $HISTORY_FILE
-    tail -n 10 $HISTORY_FILE > ${HISTORY_FILE}.tmp && mv ${HISTORY_FILE}.tmp $HISTORY_FILE
-    HISTORY=$(awk '{printf "%s,", $0}' $HISTORY_FILE | sed 's/,$//')
+    echo "$LATENCY" >> "$HISTORY_FILE"
+    tail -n 10 "$HISTORY_FILE" > "${HISTORY_FILE}.tmp" && mv "${HISTORY_FILE}.tmp" "$HISTORY_FILE"
+    HISTORY=$(awk '{printf "%s,", $0}' "$HISTORY_FILE" | sed 's/,$//')
 
     # Nivel calitate
     if [ "$STATUS" = "DOWN" ]; then
@@ -43,7 +48,7 @@ do
     PUBLIC_IP=$(wget -qO- https://api.ipify.org || echo "unknown")
 
     # JSON
-    cat <<EOF > $OUTPUT_FILE
+    cat <<EOF > "$OUTPUT_FILE"
 {
   "internet": {
     "status": "$STATUS",

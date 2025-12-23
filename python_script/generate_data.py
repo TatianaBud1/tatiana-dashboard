@@ -52,8 +52,6 @@ def get_weather():
             }
         if len(days) == 7:
             break
-
-    # Scriem datele într-un JSON temporar
     with open("/tmp/weather.json", "w") as f:
         json.dump(list(days.values()), f, indent=2)
 

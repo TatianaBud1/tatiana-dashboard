@@ -7,11 +7,14 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./python_script/data:/data
+      - ./python_script:/app
     depends_on:
       - bash-monitor
 
   bash-monitor:
-    build: ./bash-monitor
+    build:
+      context: .
+      dockerfile: Dockerfile.bash
+    container_name: bash-monitor
     volumes:
       - ./python_script/data:/data

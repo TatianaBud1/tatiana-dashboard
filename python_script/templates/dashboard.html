@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌤 Live Weather Dashboard</title>
+    <title>🌤 Meteo Corjeuți – Dashboard</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
@@ -139,70 +139,102 @@
     <div class="cloud cloud2"></div>
     <div class="cloud cloud3"></div>
     <div class="sun"></div>
+
+    <!-- Carduri meteo -->
     <div id="cards"></div>
     <div id="rain-container"></div>
 
+    <!-- Chart latență -->
     <h3>📊 Latency History (ms)</h3>
     <canvas id="latencyChart" width="400" height="200"></canvas>
 
     <script>
         let latencyChart;
 
+        // Zile săptămână în română
+        const zileRo = {
+            "Sunday": "Duminică",
+            "Monday": "Luni",
+            "Tuesday": "Marți",
+            "Wednesday": "Miercuri",
+            "Thursday": "Joi",
+            "Friday": "Vineri",
+            "Saturday": "Sâmbătă"
+        };
+
         async function loadWeather() {
-            const res = await fetch("/api/weather");
-            const data = await res.json();
+            try {
+                const res = await fetch("/api/weather");
+                const data = await res.json();
+                if (data.error) { console.error(data.error); return; }
 
-            if (data.error) { console.error(data.error); return; }
+                // Carduri meteo
+                const cards = document.getElementById("cards");
+                cards.innerHTML = "";
+                data.weather.forEach(day => {
+                    const ziRo = zileRo[day.day] || day.day;
+                    const card = document.createElement("div");
+                    card.className = "card";
+                    card.innerHTML = `
+                        <div class="icon">${day.icon}</div>
+                        <div class="temp">${day.temp}°C</div>
+                        <div class="small">${ziRo}</div>
+                        <div class="small">💧 ${day.humidity}%</div>
+                        <div class="small">🌬 ${day.wind} m/s</div>
+                    `;
+                    cards.appendChild(card);
+                });
 
-            const cards = document.getElementById("cards");
-            cards.innerHTML = "";
-
-            data.weather.forEach(day => {
-                const card = document.createElement("div");
-                card.className = "card";
-                card.innerHTML = `
-            <div class="icon">${day.icon}</div>
-            <div class="temp">${day.temp}°C</div>
-            <div class="small">${day.day}</div>
-            <div class="small">💧 ${day.humidity}%</div>
-            <div class="small">🌬 ${day.wind} m/s</div>
-        `;
-                cards.appendChild(card);
-            });
-
-            // Ploaie / soare
-            const rainContainer = document.getElementById("rain-container");
-            rainContainer.innerHTML = "";
-            const rainy = data.weather.some(d => d.icon.includes("🌧") || d.icon.includes("⛈"));
-            document.querySelector(".sun").style.display = rainy ? "none" : "block";
-
-            if (rainy) {
-                for (let i = 0; i < 50; i++) {
-                    const drop = document.createElement("div");
-                    drop.className = "rain-drop";
-                    drop.style.left = Math.random() * window.innerWidth + "px";
-                    drop.style.animationDuration = (0.5 + Math.random() * 0.5) + "s";
-                    drop.style.top = -Math.random() * 100 + "px";
-                    rainContainer.appendChild(drop);
+                // Ploaie / soare
+                const rainContainer = document.getElementById("rain-container");
+                rainContainer.innerHTML = "";
+                const rainy = data.weather.some(d => d.icon.includes("🌧") || d.icon.includes("⛈"));
+                document.querySelector(".sun").style.display = rainy ? "none" : "block";
+                if (rainy) {
+                    for (let i = 0; i < 50; i++) {
+                        const drop = document.createElement("div");
+                        drop.className = "rain-drop";
+                        drop.style.left = Math.random() * window.innerWidth + "px";
+                        drop.style.animationDuration = (0.5 + Math.random() * 0.5) + "s";
+                        drop.style.top = -Math.random() * 100 + "px";
+                        rainContainer.appendChild(drop);
+                    }
                 }
+
+                // Chart latență
+                const ctx = document.getElementById('latencyChart').getContext('2d');
+                const labels = data.weather.map(d => zileRo[d.day] || d.day);
+                const latencyData = data.latency;
+
+                if (latencyChart) latencyChart.destroy();
+
+                latencyChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Latency (ms)',
+                            data: latencyData,
+                            borderColor: 'blue',
+                            fill: false,
+                            tension: 0.2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+
+            } catch (err) {
+                console.error("Eroare la încărcare date:", err);
             }
-
-            // Latency chart
-            const ctx = document.getElementById('latencyChart').getContext('2d');
-            const labels = data.weather.map(d => d.day);
-            const latencyData = data.latency;
-
-            if (latencyChart) latencyChart.destroy();
-
-            latencyChart = new Chart(ctx, {
-                type: 'line',
-                data: { labels: labels, datasets: [{ label: 'Latency (ms)', data: latencyData, borderColor: 'blue', fill: false, tension: 0.2 }] },
-                options: { responsive: true, scales: { y: { beginAtZero: true } } }
-            });
         }
 
         loadWeather();
-        setInterval(loadWeather, 600000);
+        setInterval(loadWeather, 600000); // refresh la 10 minute
     </script>
 </body>
 

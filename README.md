@@ -136,7 +136,7 @@ Adaugi secretul GHCR_TOKEN în repository la Settings → Secrets → Actions.
 
 📁 Workflow CI Example: .github/workflows/docker-ci.yml
 yaml
-Копировать код
+Copiere cod
 name: CI DevOps Dashboard
 
 on:
