@@ -45,10 +45,6 @@ yaml
 * **Docker Compose**
 * Python 3.x (opțional pentru rulare locală fără Docker)
 
----
-
-## 🔽 Instalare
-
 ### 1️⃣ Clonarea proiectului
 
 ```bash
@@ -60,8 +56,6 @@ bash
 Копировать код
 docker-compose build
 3️⃣ Pornirea aplicației
-bash
-Копировать код
 docker-compose up
 Servicii porniți:
 
