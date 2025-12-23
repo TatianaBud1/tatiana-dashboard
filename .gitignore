@@ -1,0 +1,26 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Fișiere temporare
+*.log
+/tmp/
+
+# Date generate de monitor
+python_script/data/
+python_script/data/connectivity.json
+python_script/data/latency_history.tmp
+
+# Chei API
+.env
+
+# Docker
+*.env
+*.dockerignore
+
+# IDE / editor
+.vscode/
+.idea/
+*.swp

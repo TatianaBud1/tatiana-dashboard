@@ -1,0 +1,44 @@
+name: CD – Deploy to GHCR
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  push-images:
+    runs-on: ubuntu-latest
+    env:
+      GHCR_USERNAME: ${{ github.actor }}
+
+    steps:
+      # 1️⃣ Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2️⃣ Log in to GHCR
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ env.GHCR_USERNAME }}
+          password: ${{ secrets.GHCR_TOKEN }}
+
+      # 3️⃣ Build Bash Service image
+      - name: Build Bash Service image
+        run: |
+          docker build -f Dockerfile.bash -t ghcr.io/${GHCR_USERNAME,,}/tatiana-bash:latest .
+
+      # 4️⃣ Build Python Dashboard image
+      - name: Build Python Dashboard image
+        run: |
+          docker build -f Dockerfile.python -t ghcr.io/${GHCR_USERNAME,,}/tatiana-dashboard:latest .
+
+      # 5️⃣ Push Bash Service image
+      - name: Push Bash Service image
+        run: |
+          docker push ghcr.io/${GHCR_USERNAME,,}/tatiana-bash:latest
+
+      # 6️⃣ Push Python Dashboard image
+      - name: Push Python Dashboard image
+        run: |
+          docker push ghcr.io/${GHCR_USERNAME,,}/tatiana-dashboard:latest

@@ -1,5 +1,5 @@
 services:
-  python_dashboard:
+  python-dashboard:
     build:
       context: .
       dockerfile: Dockerfile.python
@@ -7,10 +7,11 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - ./python_script:/app
+      - ./python_script/data:/data
+    depends_on:
+      - bash-monitor
 
-  bash_monitor:
-    build:
-      context: .
-      dockerfile: Dockerfile.bash
-    container_name: bash-monitor
+  bash-monitor:
+    build: ./bash-monitor
+    volumes:
+      - ./python_script/data:/data
